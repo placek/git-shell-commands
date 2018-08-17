@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+DIR="$(pwd)/$(dirname $BASH_SOURCE[0])"
+
+if [ $# -eq 0 ]
+then
+  echo "Usage: $0 <project.git>"
+  exit 1
+fi
+
+project=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+
+echo "Type in a description for the project:"
+read description
+
+mkdir -p "$GIT_DIR_BASE/$project"
+pushd "$GIT_DIR_BASE/$project"
+git --bare init
+echo $description > description
+mkdir shared
+rm -rf hooks/*
+
+cat $DIR/post-update > hooks/post-update
+chmod +x hooks/post-update
+popd
+
+echo "Success: added a new project $project"

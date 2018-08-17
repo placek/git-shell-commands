@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+DIR="$(pwd)/$(dirname $BASH_SOURCE[0])"
+
+if [ $# -eq 0 ]
+then
+  echo "Usage: $0 <project.git>"
+  exit 1
+fi
+
+project=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+
+if [[ ! -d "$GIT_DIR_BASE/$project" ]]
+then
+  echo "Error: cannot find project $project"
+  exit 1
+fi
+
+target="$GIT_DIR_BASE/$project/shared"
+
+mkdir -p "$target/bin"
+
+cp $(which busybox) "$target/bin"
+pushd "$target/bin"
+for i in $(cat "$DIR/cmd.whitelist"); do ln -s busybox $i; done
+popd
+
+chroot "$target" /bin/sh && rm -rf "$target/bin"
+
+echo "Exited $project/shared"

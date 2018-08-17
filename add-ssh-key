@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+currentuser=$(cat /var/log/auth.log | grep "Accepted publickey for git " | tail -n1 | cut -d: -f6)
+if [[ ! $(grep $currentuser "$GIT_DIR_BASE/add-ssh-key.whitelist") ]]
+then
+  echo "Error: You don't have permission to add a new SSH key"
+  exit 1
+fi
+
+echo "Type in the public SSH key to be added:"
+read key
+
+keyfile=$(tempfile) && echo "$key" > $keyfile
+fingerprint=$(ssh-keygen -lf $keyfile)
+
+if [ $(echo "$fingerprint" | egrep -c '(R|D)SA') -eq 0 ]
+then
+  echo "Error: $fingerprint"
+  rm $keyfile
+  exit 1
+fi
+
+mkdir -p .ssh && \
+echo -n "no-agent-forwarding,no-port-forwarding,no-X11-forwarding " >> .ssh/authorized_keys && \
+cat $keyfile >> .ssh/authorized_keys
+rm $keyfile
+
+echo "Success: added a key $fingerprint"

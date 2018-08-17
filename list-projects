@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+print_repo='
+  if "$(git --git-dir="$1" rev-parse --is-bare-repository)" = true
+  then
+    printf "%s" "${1#./}"
+    if [ -d "$1/current" ]
+    then
+      domain=$(grep VIRTUAL_HOST $1/current/local.ci.yml | cut -d"=" -f2)
+      printf "\tdeployed at \"http://%s" $domain
+    fi
+    printf "\n"
+  fi
+'
+
+find $GIT_DIR_BASE -type d -name "*.git" -exec sh -c "$print_repo" -- \{} \; -prune 2>/dev/null

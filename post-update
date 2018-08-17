@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+currentuser=$(cat /var/log/auth.log | grep "Accepted publickey for git " | tail -n1 | cut -d: -f6)
+if [[ ! $(grep $currentuser "$GIT_DIR_BASE/deploy.whitelist") ]]
+then
+  echo "Error: You don't have access to deploy this project"
+  exit 1
+fi
+
+refname=$1
+
+if [[ $refname == "refs/tags/deploy" ]]
+then
+  if [[ -f $refname ]]
+  then
+    echo "[DEPLOY] $rev"
+    rev=$(cat $refname)
+    mkdir $rev
+    git archive $rev | tar -xf - -C $rev
+    [ -d shared ] && cp -R shared/. $rev
+    pushd $rev
+    docker-compose --file local.ci.yml up --detach
+    popd
+    ln -s $rev current
+  else
+    echo "[ HALT ] $(readlink current)"
+    pushd current
+    docker-compose --file local.ci.yml down
+    popd
+    rm -rf $(readlink current)
+    rm -rf current
+  fi
+fi
+
+exit 0
+
