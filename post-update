@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-currentuser=$(cat /var/log/auth.log | grep "Accepted publickey for git " | tail -n1 | cut -d: -f6)
-if [[ ! $(grep $currentuser "$GIT_DIR_BASE/deploy.whitelist") ]]
-then
-  echo "Error: You don't have access to deploy this project"
-  exit 1
-fi
-
 refname=$1
 
 if [[ $refname == "refs/tags/deploy" ]]

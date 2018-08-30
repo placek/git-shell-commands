@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-currentuser=$(cat /var/log/auth.log | grep "Accepted publickey for git " | tail -n1 | cut -d: -f6)
-if [[ ! $(grep $currentuser "$GIT_DIR_BASE/add-ssh-key.whitelist") ]]
-then
-  echo "Error: You don't have permission to add a new SSH key"
-  exit 1
-fi
-
 echo "Type in the public SSH key to be added:"
 read key
 
