@@ -32,6 +32,7 @@ su - git --shell /bin/bash
 mkdir .ssh && chmod 700 .ssh
 touch .ssh/authorized_keys
 chmod 600 .ssh/authorized_keys
+logout
 
 # /repos
 sudo mkdir -p /var/opt/git
@@ -39,9 +40,13 @@ sudo chown -R git /var/opt/git
 sudo ln -s /var/opt/git /repos
 sudo chown -R git /repos
 sudo sh -c 'echo "GIT_BASE_DIR=/repos" >> /etc/environment'
+
+# nginx-proxy
+docker network create nginx-proxy_net
+docker run --name nginx-proxy --net nginx-proxy_net -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy:alpine
 ```
 
-# Set DNS on localhost
+# Set DNS on localhost (OSX)
 
 ```
 brew install dnsmasq

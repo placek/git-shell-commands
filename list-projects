@@ -13,4 +13,4 @@ print_repo='
   fi
 '
 
-find $GIT_DIR_BASE -type d -name "*.git" -exec sh -c "$print_repo" -- \{} \; -prune 2>/dev/null
+find $GIT_BASE_DIR -type d -name "*.git" -exec sh -c "$print_repo" -- \{} \; -prune 2>/dev/null

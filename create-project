@@ -13,8 +13,8 @@ project=$(echo "$1" | sed 's/\.git$\|$/.git/i')
 echo "Type in a description for the project:"
 read description
 
-mkdir -p "$GIT_DIR_BASE/$project"
-pushd "$GIT_DIR_BASE/$project"
+mkdir -p "$GIT_BASE_DIR/$project"
+pushd "$GIT_BASE_DIR/$project"
 git --bare init
 echo $description > description
 mkdir shared

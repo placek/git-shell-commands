@@ -10,13 +10,13 @@ fi
 
 project=$(echo "$1" | sed 's/\.git$\|$/.git/i')
 
-if [[ ! -d "$GIT_DIR_BASE/$project" ]]
+if [[ ! -d "$GIT_BASE_DIR/$project" ]]
 then
   echo "Error: cannot find project $project"
   exit 1
 fi
 
-target="$GIT_DIR_BASE/$project/shared"
+target="$GIT_BASE_DIR/$project/shared"
 
 mkdir -p "$target/bin"
 
