@@ -8,20 +8,21 @@ then
   then
     echo "[DEPLOY] $rev"
     rev=$(cat $refname)
-    mkdir $rev
-    git archive $rev | tar -xf - -C $rev
-    [ -d shared ] && cp -R shared/. $rev
-    pushd $rev
+    rm -rf releases/$rev
+    mkdir -p releases/$rev
+    git archive $rev | tar -xf - -C releases/$rev
+    [ -d shared ] && cp -R shared/. releases/$rev
+    pushd releases/$rev
     docker-compose --file local.ci.yml up --detach
     popd
-    ln -s $rev current
-  else
-    echo "[ HALT ] $(readlink current)"
-    pushd current
-    docker-compose --file local.ci.yml down
-    popd
-    rm -rf $(readlink current)
     rm -rf current
+    ln -s releases/$rev current
+  else
+    echo "[ HALT ] $(readlink current | cut -d'/' -f2)"
+    pushd current
+    docker-compose --file local.ci.yml stop
+    popd
+    mv current old
   fi
 fi
 

@@ -6,7 +6,6 @@ sudo apt-get upgrade
 
 # ssh
 sudo service ssh start
-sudo service ssh status
 
 # docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -43,7 +42,10 @@ sudo sh -c 'echo "GIT_BASE_DIR=/repos" >> /etc/environment'
 
 # nginx-proxy
 docker network create nginx-proxy_net
-docker run --name nginx-proxy --net nginx-proxy_net -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy:alpine
+docker run --name nginx-proxy --net nginx-proxy_net --restart always --detach --publish 80:80 --volume /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy:alpine
+
+# apparmor
+sudo rm -rf /var/lib/snapd/apparmor/profiles/snap.docker.*
 ```
 
 # Set DNS on localhost (OSX)
