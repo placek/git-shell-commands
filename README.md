@@ -65,3 +65,46 @@ sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
 sudo mkdir -p /etc/resolver
 sudo sh -c 'echo "nameserver 127.0.0.1" > /etc/resolver/mini'
 ```
+
+# Example `local.ci.yml` file
+
+```
+version: '3.4'
+services:
+  db:
+    container_name: politechnika_db
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - database:/var/lib/postgresql/data
+    networks:
+      - nginx-proxy_net
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.local.ci
+    container_name: politechnika_web
+    image: mini:5000/politechnika
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - .:/var/opt/www
+    command:
+      bundle exec puma
+    environment:
+      - 'VIRTUAL_HOST=politechnika.mini'
+      - 'VIRTUAL_PORT=3000'
+    expose:
+      - 3000
+    networks:
+      - nginx-proxy_net
+
+networks:
+  nginx-proxy_net:
+    external: true
+
+volumes:
+  database:
+```
