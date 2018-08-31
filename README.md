@@ -44,6 +44,12 @@ sudo sh -c 'echo "GIT_BASE_DIR=/repos" >> /etc/environment'
 docker network create nginx-proxy_net
 docker run --name nginx-proxy --net nginx-proxy_net --restart always --detach --publish 80:80 --volume /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy:alpine
 
+# registy
+sudo sh -c 'echo "{ \"insecure-registries\" : [\"mini:5000\"] }" > /etc/docker/daemon.json'
+sudo service docker restart
+sudo mkdir -p /var/opt/docker/registry
+docker run -d -p 5000:5000 -v /var/opt/docker/registry:/var/lib/registry --restart=always --name registry registry:2
+
 # apparmor
 sudo rm -rf /var/lib/snapd/apparmor/profiles/snap.docker.*
 ```
