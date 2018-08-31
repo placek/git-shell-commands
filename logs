@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+if [ $# -eq 0 ]
+then
+  echo "Usage: $0 <project.git>"
+  exit 1
+fi
+
+project=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+target="$GIT_BASE_DIR/$project"
+
+if [[ ! -d $target ]]
+then
+  echo "Error: cannot find project $project"
+  exit 1
+fi
+
+if [[ -d "$target/current" ]]
+then
+  pushd $target/current
+  docker-compose --file local.ci.yml logs -t | more
+  popd
+elif [[ -d "$target/old" ]]
+then
+  pushd $target/old
+  docker-compose --file local.ci.yml logs -t | more
+  popd
+else
+  echo "Error: project $project was not deployed yet"
+  exit 1
+fi
+

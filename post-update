@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+date '+[%Y-%m-%d %H:%M:%S]'
 refname=$1
 
 if [[ $refname == "refs/tags/deploy" ]]
