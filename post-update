@@ -14,7 +14,7 @@ then
     git archive $rev | tar -xf - -C releases/$rev
     [ -d shared ] && cp -R shared/. releases/$rev
     pushd releases/$rev
-    docker-compose --file local.ci.yml up --detach
+    docker-compose --file local.ci.yml up --detach && push "[DEPLOY] $(pwd)"
     popd
     rm -rf current
     ln -s releases/$rev current
