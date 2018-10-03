@@ -18,13 +18,6 @@ fi
 
 target="$GIT_BASE_DIR/$project/shared"
 
-mkdir -p "$target/bin"
-
-cp $(which busybox) "$target/bin"
-pushd "$target/bin"
-for i in $(cat "$DIR/cmd.whitelist"); do ln -s busybox $i; done
-popd
-
-chroot "$target" /bin/sh && rm -rf "$target/bin"
+docker run --rm -it -v "$target:/shared" -w="/shared" busybox
 
 echo "Exited $project/shared"
