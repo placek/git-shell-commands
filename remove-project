@@ -6,29 +6,15 @@ then
   exit 1
 fi
 
-read -p "Continue [y/N]? " choice
+read -rp "Continue [y/N]? " choice
 case "$choice" in
   y|Y ) ;;
   * ) exit 0;;
 esac
 
-project=$(echo "$1" | sed 's/\.git$\|$/.git/i')
+project="$(basename "$1" ".git").git"
+target="${GIT_BASE_DIR}/${project}"
 
-target="$GIT_BASE_DIR/$project"
-
-if [[ -d "$target/current" ]]
-then
-  echo "Error: project $project is still deployed"
-  exit 1
-fi
-
-if [[ -d "$target/old" ]]
-then
-  pushd $target/old
-  docker-compose --file local.ci.yml down --volumes --remove-orphans
-  popd
-fi
-
-rm -rf $target
+rm -rf "$target"
 
 echo "Success: removed a project $project"

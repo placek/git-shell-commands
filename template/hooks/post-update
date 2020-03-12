@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+refname=$1
+
+if [[ $refname == "refs/tags/deploy" ]]
+then
+  if [[ -f $refname ]]
+  then
+    rev=$(cat "$refname")
+    prefix=$(date "+[DEPLOY %Y-%m-%d %H:%M:%S] $rev ")
+    exec > >(sed "s/^/$prefix/")
+    exec 2> >(sed "s/^/$prefix/" >&2)
+    if ! config=$(git show "${rev}:docker-compose.yml")
+    then
+      echo "checking deployment configuration"
+      >&2 echo "${config}"
+      # TODO here goes deploying script
+    fi
+  else
+    prefix=$(date "+[ HALT  %Y-%m-%d %H:%M:%S] ")
+    exec > >(sed "s/^/$prefix/")
+    exec 2> >(sed "s/^/$prefix/" >&2)
+    if ! config=$(git show "${rev}:docker-compose.yml")
+    then
+      echo "checking deployment configuration"
+      >&2 echo "${config}"
+      # TODO here goes halting script
+    fi
+  fi
+fi
+
+exit 0

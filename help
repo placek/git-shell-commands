@@ -7,7 +7,7 @@ else
   echo "Run 'help' for help.  Available commands:"
 fi
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 
 for cmd in *
 do
