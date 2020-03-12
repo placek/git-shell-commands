@@ -1,8 +1,17 @@
 - name: Configure git-shell for the application
-  hosts: webservers
+  hosts: gitservers
   become: True
   vars:
-    repositories_directory: /repos
+    env_vars:
+      GIT_BASE_DIR: /repos
+      DEPLOYMENT_CONFIG_FILE: docker-compose.yml
+      SECURE_KEY: !vault |
+        $ANSIBLE_VAULT;1.1;AES256
+        61326232373130323635363637386264363736383133363334376562353966313263373135613163
+        3765636438346364623133646665316163636232656132660a633932663930336232363161303635
+        38636235346565396163663034663139373662616466633830373333663366363962343733303736
+        3063386631323535370a323735633730333061356439343064356434613939386166643936633435
+        66616637383033646130666536623264366464316137646637643939646232666262
   tasks:
     - name: Install git
       apt:
@@ -20,19 +29,20 @@
         user: git
         state: present
         key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    - name: Ensure environment variables
+      lineinfile:
+        path: /etc/environment
+        regexp: '^{{ item.key }}='
+        line: '{{ item.key }}="{{ item.value }}"'
+      loop: "{{ env_vars | dict2items }}"
     - name: Create repositories directory
       file:
-        path: "{{ repositories_directory }}"
+        path: "{{ env_vars.GIT_BASE_DIR }}"
         state: directory
         group: adm
         owner: git
         recurse: yes
         mode: 0740
-    - name: Ensure GIT_BASE_DIR environment
-      lineinfile:
-        path: /etc/environment
-        regexp: "^GIT_BASE_DIR="
-        line: "GIT_BASE_DIR={{ repositories_directory }}"
     - name: Set up the git-shell-commands directory
       git:
         repo: "https://github.com/placek/git-shell-commands.git"
