@@ -1,0 +1,40 @@
+- name: Configure git-shell for the application
+  hosts: webservers
+  become: True
+  vars:
+    repositories_directory: /repos
+  tasks:
+    - name: Install git
+      apt:
+        name: git
+        update_cache: yes
+        cache_valid_time: 3600
+    - name: Add git user
+      user:
+        name: git
+        shell: /usr/bin/git-shell
+        groups: adm
+        append: yes
+    - name: Set access via SSH
+      authorized_key:
+        user: git
+        state: present
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    - name: Create repositories directory
+      file:
+        path: "{{ repositories_directory }}"
+        state: directory
+        group: adm
+        owner: git
+        recurse: yes
+        mode: 0740
+    - name: Ensure GIT_BASE_DIR environment
+      lineinfile:
+        path: /etc/environment
+        regexp: "^GIT_BASE_DIR="
+        line: "GIT_BASE_DIR={{ repositories_directory }}"
+    - name: Set up the git-shell-commands directory
+      git:
+        repo: "https://github.com/placek/git-shell-commands.git"
+        dest: /home/git/git-shell-commands
+        version: master

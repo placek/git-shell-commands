@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 refname=$1
+config_file="docker-compose.yml"
 
 if [[ $refname == "refs/tags/deploy" ]]
 then
@@ -10,7 +11,7 @@ then
     prefix=$(date "+[DEPLOY %Y-%m-%d %H:%M:%S] $rev ")
     exec > >(sed "s/^/$prefix/")
     exec 2> >(sed "s/^/$prefix/" >&2)
-    if ! config=$(git show "${rev}:docker-compose.yml")
+    if ! config=$(git show "${rev}:${config_file}")
     then
       echo "checking deployment configuration"
       >&2 echo "${config}"
@@ -20,7 +21,7 @@ then
     prefix=$(date "+[ HALT  %Y-%m-%d %H:%M:%S] ")
     exec > >(sed "s/^/$prefix/")
     exec 2> >(sed "s/^/$prefix/" >&2)
-    if ! config=$(git show "${rev}:docker-compose.yml")
+    if ! config=$(git show "${rev}:${config_file}")
     then
       echo "checking deployment configuration"
       >&2 echo "${config}"

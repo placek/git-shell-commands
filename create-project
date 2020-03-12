@@ -11,11 +11,6 @@ fi
 project="$(basename "$1" ".git").git"
 target="${GIT_BASE_DIR}/${project}"
 
-echo "Type in a description for the project:"
-read -r description
-
 git init --bare --template="${dir}/template" "${target}"
-
-echo "${target}/${description}" > description
 
 echo "Success: added a new project $project"
