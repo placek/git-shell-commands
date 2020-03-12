@@ -18,6 +18,4 @@ git init --bare --template="${dir}/template" "${target}"
 
 echo "${target}/${description}" > description
 
-chmod +x "${target}/hooks/*"
-
 echo "Success: added a new project $project"
