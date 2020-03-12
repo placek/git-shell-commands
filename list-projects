@@ -3,7 +3,7 @@
 print_repo='
   if "$(git --git-dir="$1" rev-parse --is-bare-repository)" = true
   then
-    printf "%s" "${1#./}\n"
+    printf "%s\n" "${1#./}"
   fi
 '
 
