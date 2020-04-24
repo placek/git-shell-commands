@@ -1,5 +1,7 @@
 # Setup the server
 
+(it will change in future)
+
 ```
 sudo apt-get update
 sudo apt-get upgrade

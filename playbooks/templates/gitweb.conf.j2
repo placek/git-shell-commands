@@ -1,0 +1,29 @@
+our $projectroot = "{{ env_vars.GIT_BASE_DIR }}";
+our $site_name = "mini";
+
+# directory to use for temp files
+our $git_temp = "/tmp";
+
+# Base URLs for links displayed in the web interface.
+#our @git_base_url_list = qw(git://{{ ansible_hostname }} http://git@{{ ansible_hostname }});
+
+#$feature{'blame'}{'default'} = [1];
+
+# target of the home link on top of all pages
+#$home_link = $my_uri || "/";
+
+# html text to include at home page
+#$home_text = "indextext.html";
+
+# file with project list; by default, simply scan the projectroot dir.
+#$projects_list = $projectroot;
+
+# stylesheet to use
+# I took off the prefix / of the following path to put these files inside gitweb directory directly
+#$stylesheet = "gitweb.css";
+
+# logo to use
+#$logo = "git-logo.png";
+
+# the favicon
+#$favicon = "git-favicon.png";
