@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+
+reposDir="/var/git"
+
+if [ -z "$1" ]; then
+  echo "exiting, no repo name input to delete"
+  echo "usage: 'repos-delete <repo>'"
+  exit 1
+fi
+
+case "$1" in
+*.git)
+  deleteRepoDir=$reposDir/$1
+  ;;
+*)
+  deleteRepoDir=$reposDir/$1.git
+  ;;
+esac
+
+if [ ! -d "$deleteRepoDir" ]; then
+  echo "exiting, repo '$deleteRepoDir' does not exist"
+  exit 1
+fi
+
+read -r "are you sure to delete the repo '$deleteRepoDir' (y/n)? " choice
+
+case "$choice" in
+  y|Y) echo "'yes' selected, deleting '$deleteRepoDir'" ;;
+  n|N) echo "'no' selected, exiting" && exit 0 ;;
+  *)   echo "invalid option, exiting" && exit 1 ;;
+esac
+
+rm -rf "$deleteRepoDir"
+
+echo "repo '$deleteRepoDir' has been deleted"

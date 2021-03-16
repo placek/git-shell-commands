@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+reposDir="/var/git"
+
+if [ -z "$1" ]; then
+  echo "exiting, no repo name input to create"
+  echo "usage: 'repos-create <repo>'"
+  exit 1
+fi
+
+case "$1" in
+*.git)
+  newRepoDir=$reposDir/$1 ;;
+*)
+  newRepoDir=$reposDir/$1.git ;;
+esac
+
+if [ -d "$newRepoDir" ]; then
+  echo "exiting, repo '$newRepoDir' already exists"
+  exit 1
+else
+  echo "creating new repo '$newRepoDir'"
+  mkdir -p "$newRepoDir"
+  git init --bare --template="$reposDir/template" "$newRepoDir"
+  echo "new repo '$newRepoDir' created"
+fi

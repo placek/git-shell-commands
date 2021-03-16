@@ -1,0 +1,53 @@
+#!/usr/bin/env sh
+
+reposDir="/var/git"
+pipelines="$reposDir/pipelines"
+
+if [ -z "$1" ]; then
+  echo "exiting, no repo input to run"
+  echo "usage: 'ci-run <repo>'"
+  exit 1
+fi
+
+mkdir -p $pipelines
+
+case "$1" in
+*.git)
+  repoDir=$reposDir/$1
+  pipeline=$pipelines/$1-$(date +%s | sha1sum - | cut -d ' ' -f 1)
+  ;;
+*)
+  repoDir=$reposDir/$1.git
+  pipeline=$pipelines/$1.git-$(date +%s | sha1sum - | cut -d ' ' -f 1)
+  ;;
+esac
+
+id=$(basename "$pipeline")
+
+if [ ! -d "$repoDir" ]; then
+  echo "exiting, cannot find repo $repoDir"
+  exit 1
+fi
+
+workDir=$(mktemp -d)
+branch=${2:-"master"}
+
+echo ">>> pipeline started at $(date) in $workDir <<<" >> "$pipeline"
+
+git clone "$repoDir" -b "$branch" "$workDir" 2>&1 | tee -a "$pipeline"
+
+ciRunner="$workDir/.ci.runner"
+
+if [ ! -f "$ciRunner" ]; then
+  echo "exiting, no CI configuration found in $repoDir"
+  rm -rf "$workDir"
+  exit 1
+fi
+
+cd "$workDir" || exit 1
+exec $ciRunner 2>&1 | tee -a "$pipeline"
+
+rm -rf "$workDir"
+
+echo ">>> done <<<" 2>&1 | tee -a "$pipeline"
+echo "$id"

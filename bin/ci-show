@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+reposDir="/var/git"
+
+if [ -z "$1" ]; then
+  echo "exiting, no pipeline input to show"
+  echo "usage: 'ci-show <pipeline>'"
+  exit 1
+fi
+
+pipeline="$reposDir/pipelines/$1"
+
+if [ ! -f "$pipeline" ]; then
+  echo "exiting, cannot find pipeline $pipeline"
+  exit 1
+fi
+
+cat "$pipeline"

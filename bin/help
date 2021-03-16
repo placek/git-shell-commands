@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 if tty -s
 then
@@ -16,3 +16,4 @@ do
   *) [ -f "$cmd" ] && [ -x "$cmd" ] && echo "$cmd" ;;
   esac
 done
+
