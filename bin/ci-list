@@ -4,4 +4,4 @@ reposDir="/var/git"
 
 mkdir -p $reposDir/pipelines
 
-find $reposDir/pipelines -type f -print0 | xargs -0  -n1 basename
+find $reposDir/pipelines -type f -print0 | xargs -0 -n1 basename
