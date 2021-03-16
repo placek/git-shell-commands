@@ -23,7 +23,7 @@ fi
 
 id=$repo-$(date +%Y%m%d%H%M%S)
 pipeline=$pipelines/$id
-workDir=$(mktemp -d $repo.XXXXXX)
+workDir=$(mktemp -d /tmp/$repo.XXXXXX)
 branch=${2:-"master"}
 ciRunner="$workDir/.ci.runner"
 
