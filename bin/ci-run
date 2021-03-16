@@ -14,11 +14,11 @@ mkdir -p $pipelines
 case "$1" in
 *.git)
   repoDir=$reposDir/$1
-  pipeline=$pipelines/$1-$(date +%s | sha1sum - | cut -d ' ' -f 1)
+  pipeline=$pipelines/$1-$(date +%Y%m%d%H%M%S)
   ;;
 *)
   repoDir=$reposDir/$1.git
-  pipeline=$pipelines/$1.git-$(date +%s | sha1sum - | cut -d ' ' -f 1)
+  pipeline=$pipelines/$1.git-$(date +%Y%m%d%H%M%S)
   ;;
 esac
 
