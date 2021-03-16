@@ -2,15 +2,23 @@
 
 reposDir="/var/git"
 
-read -r "are you sure to delete all pipelines and dependencies (y/n)? " choice
+mkdir -p $reposDir/pipelines
+
+echo "are you sure to delete all pipelines (y/n)?"
+read -r choice
 
 case "$choice" in
-  y|Y) echo "'yes' selected, processing" ;;
+  y|Y) echo "'yes' selected, processing" && rm -rf $reposDir/pipelines/* ;;
   n|N) echo "'no' selected, exiting" && exit 0 ;;
   *)   echo "invalid option, exiting" && exit 1 ;;
 esac
 
-rm -rf $reposDir/pipelines/*
-docker system prune --all --volumes --force
 
-echo "pipeline is now fresh"
+echo "are you sure to delete all dependencies (y/n)?"
+read -r choice
+
+case "$choice" in
+  y|Y) echo "'yes' selected, processing" && docker system prune --all --volumes --force ;;
+  n|N) echo "'no' selected, exiting" && exit 0 ;;
+  *)   echo "invalid option, exiting" && exit 1 ;;
+esac

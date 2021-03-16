@@ -22,7 +22,8 @@ if [ ! -d "$deleteRepoDir" ]; then
   exit 1
 fi
 
-read -r "are you sure to delete the repo '$deleteRepoDir' (y/n)? " choice
+echo "are you sure to delete the repo '$deleteRepoDir' (y/n)?"
+read -r choice
 
 case "$choice" in
   y|Y) echo "'yes' selected, deleting '$deleteRepoDir'" ;;

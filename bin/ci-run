@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
 reposDir="/var/git"
+
+mkdir -p $reposDir/pipelines
+
 pipelines="$reposDir/pipelines"
 
 if [ -z "$1" ]; then
@@ -8,8 +11,6 @@ if [ -z "$1" ]; then
   echo "usage: 'ci-run <repo>'"
   exit 1
 fi
-
-mkdir -p $pipelines
 
 case "$1" in
 *.git)

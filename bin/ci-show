@@ -2,6 +2,8 @@
 
 reposDir="/var/git"
 
+mkdir -p $reposDir/pipelines
+
 if [ -z "$1" ]; then
   echo "exiting, no pipeline input to show"
   echo "usage: 'ci-show <pipeline>'"
