@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-reposDir="/var/git"
-
-find $reposDir -name '*.git' -type d -print0 | xargs -0 -n1 basename

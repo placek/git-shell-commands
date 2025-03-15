@@ -1,6 +1,6 @@
 # git-shell-commands
 
-Git repositories management with simple CI scripting.
+Git repositories management with simple CD-like commands.
 
 ### usage
 

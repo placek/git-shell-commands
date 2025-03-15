@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+deployDir="/srv/deploy"
+
+if [ -z "$1" ]; then
+  >&2 echo "exiting, no repo input to run"
+  >&2 echo "usage: 'down <repo>'"
+  exit 1
+fi
+
+case "$1" in
+  *.git) repo=$1 ;;
+  *)     repo=$1.git ;;
+esac
+
+targetDir="$deployDir/$repo"
+
+if [ ! -d "$repoDir" ]; then
+  >&2 echo "exiting, cannot find app $targetDir"
+  exit 1
+fi
+
+echo "are you sure to remove $repo app (y/n)?"
+read -r choice
+
+case "$choice" in
+  y|Y) echo "'yes' selected, processing" ;;
+  *)   echo "exiting" && exit 0 ;;
+esac
+
+docker-compose -f "$targetDir/docker-compose.yml" down --remove-orphans --volumes
+rm -rf "$targetDir"

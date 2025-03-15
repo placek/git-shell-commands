@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 
-reposDir="/var/git"
+reposDir="/srv/git"
 
 if [ -z "$1" ]; then
-  echo "exiting, no repo name input to delete"
-  echo "usage: 'repos-delete <repo>'"
+  >&2 echo "exiting, no repo name input to delete"
+  >&2 echo "usage: 'remove <repo>'"
   exit 1
 fi
 
@@ -18,7 +18,7 @@ case "$1" in
 esac
 
 if [ ! -d "$deleteRepoDir" ]; then
-  echo "exiting, repo '$deleteRepoDir' does not exist"
+  >&2 echo "exiting, repo '$deleteRepoDir' does not exist"
   exit 1
 fi
 
@@ -27,8 +27,7 @@ read -r choice
 
 case "$choice" in
   y|Y) echo "'yes' selected, deleting '$deleteRepoDir'" ;;
-  n|N) echo "'no' selected, exiting" && exit 0 ;;
-  *)   echo "invalid option, exiting" && exit 1 ;;
+  *)   echo "exiting" && exit 0 ;;
 esac
 
 rm -rf "$deleteRepoDir"

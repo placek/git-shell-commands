@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+reposDir="/srv/git"
+appsDir="/srv/deploy"
+
+echo "repositories:"
+find $reposDir -name '*.git' -type d -print0 | xargs -0 -n1 basename
+
+echo "applications:"
+find $appsDir -name '*.git' -type d -print0 | xargs -0 -n1 basename

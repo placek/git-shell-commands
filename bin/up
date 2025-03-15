@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+reposDir="/srv/git"
+deployDir="/srv/deploy"
+
+if [ -z "$1" ]; then
+  >&2 echo "exiting, no repo input to run"
+  >&2 echo "usage: 'up <repo>'"
+  exit 1
+fi
+
+case "$1" in
+  *.git) repo=$1 ;;
+  *)     repo=$1.git ;;
+esac
+
+repoDir=$reposDir/$repo
+
+if [ ! -d "$repoDir" ]; then
+  >&2 echo "exiting, cannot find repo $repoDir"
+  exit 1
+fi
+
+targetDir="$deployDir/$repo"
+branch=${2:-"master"}
+
+if [ ! -d "$targetDir" ]; then
+  mkdir -p "$targetDir"
+  git clone "$repoDir" "$targetDir"
+fi
+
+cd "$targetDir" || exit 1
+git pull origin "$branch"
+
+docker-compose down --remove-orphans
+docker-compose up --detach --build
