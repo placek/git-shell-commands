@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 reposDir="/srv/git"
-appsDir="/srv/deploy"
+appsDir="/srv/run"
 
 echo "repositories:"
 find $reposDir -name '*.git' -type d -print0 | xargs -0 -n1 basename

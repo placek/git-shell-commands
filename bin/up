@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 reposDir="/srv/git"
-deployDir="/srv/deploy"
+deployDir="/srv/run"
 
 if [ -z "$1" ]; then
   >&2 echo "exiting, no repo input to run"

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-reposDir="/srv/git"
+reposDir="/srv/run"
 
 if [ -z "$1" ]; then
   >&2 echo "exiting, no repo name input to delete"
