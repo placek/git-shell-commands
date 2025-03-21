@@ -2,9 +2,11 @@
 
 reposDir="/srv/git"
 
+info() { echo ">> $1"; }
+
 if [ -z "$1" ]; then
-  >&2 echo "exiting, no repo name input to create"
-  >&2 echo "usage: 'create <repo>'"
+  >&2 info "exiting, no repo name input to create"
+  >&2 info "usage: 'create <repo>'"
   exit 1
 fi
 
@@ -16,11 +18,11 @@ case "$1" in
 esac
 
 if [ -d "$newRepoDir" ]; then
-  >&2 echo "exiting, repo '$newRepoDir' already exists"
+  >&2 info "exiting, repo '$newRepoDir' already exists"
   exit 1
 else
-  echo "creating new repo '$newRepoDir'"
+  info "creating new repo '$newRepoDir'"
   mkdir -p "$newRepoDir"
   git init --bare --template="$reposDir/template" "$newRepoDir"
-  echo "new repo '$newRepoDir' created"
+  info "new repo '$newRepoDir' created"
 fi

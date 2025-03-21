@@ -2,10 +2,13 @@
 
 reposDir="/srv/git"
 deployDir="/srv/run"
+dockerComposeFile="docker-compose.placki.yaml"
+
+info() { echo ">> $1"; }
 
 if [ -z "$1" ]; then
-  >&2 echo "exiting, no repo input to run"
-  >&2 echo "usage: 'up <repo>'"
+  >&2 info "exiting, no repo input to run"
+  >&2 info "usage: 'up <repo>'"
   exit 1
 fi
 
@@ -17,20 +20,28 @@ esac
 repoDir=$reposDir/$repo
 
 if [ ! -d "$repoDir" ]; then
-  >&2 echo "exiting, cannot find repo $repoDir"
+  >&2 info "exiting, cannot find repo $repoDir"
   exit 1
 fi
 
 targetDir="$deployDir/$repo"
 branch=${2:-"master"}
 
+info "deploying $repoDir to $targetDir from branch $branch:"
+
 if [ ! -d "$targetDir" ]; then
+  info "- cloning $repoDir to $targetDir…"
   mkdir -p "$targetDir"
   git clone "$repoDir" "$targetDir"
 fi
 
+info "- pulling $branch…"
 cd "$targetDir" || exit 1
 git pull origin "$branch"
 
-docker-compose down --remove-orphans
-docker-compose up --detach --build
+info "- removing old instance:"
+info "  stopping and removing containers, networks, volumes, and images…"
+docker-compose -f "$targetDir/$dockerComposeFile" down --remove-orphans
+info "- starting new instance…"
+docker-compose -f "$targetDir/$dockerComposeFile" up --detach --build
+info "done!"

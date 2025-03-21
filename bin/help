@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-echo "available commands:"
+echo ">> available commands:"
 
 cd "$(dirname "$0")" || exit
 

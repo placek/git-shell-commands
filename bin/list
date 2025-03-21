@@ -3,8 +3,10 @@
 reposDir="/srv/git"
 appsDir="/srv/run"
 
-echo "repositories:"
+info() { echo ">> $1"; }
+
+info "repositories:"
 find $reposDir -name '*.git' -type d -print0 | xargs -0 -n1 basename
 
-echo "applications:"
+info "applications:"
 find $appsDir -name '*.git' -type d -print0 | xargs -0 -n1 basename

@@ -1,10 +1,13 @@
 #!/usr/bin/env sh
 
 deployDir="/srv/run"
+dockerComposeFile="docker-compose.placki.yaml"
+
+info() { echo ">> $1"; }
 
 if [ -z "$1" ]; then
-  >&2 echo "exiting, no repo input to run"
-  >&2 echo "usage: 'down <repo>'"
+  >&2 info "exiting, no repo input to run"
+  >&2 info "usage: 'down <repo>'"
   exit 1
 fi
 
@@ -16,17 +19,21 @@ esac
 targetDir="$deployDir/$repo"
 
 if [ ! -d "$repoDir" ]; then
-  >&2 echo "exiting, cannot find app $targetDir"
+  >&2 info "exiting, cannot find app $targetDir"
   exit 1
 fi
 
-echo "are you sure to remove $repo app (y/n)?"
+info "are you sure to remove $repo app (y/n)?"
 read -r choice
 
 case "$choice" in
-  y|Y) echo "'yes' selected, processing" ;;
-  *)   echo "exiting" && exit 0 ;;
+  y|Y) info "'yes' selected, processing" ;;
+  *)   info "exiting" && exit 0 ;;
 esac
 
-docker-compose -f "$targetDir/docker-compose.yml" down --remove-orphans --volumes
+info "removing $repo app:"
+info "- removing instance:"
+info "  stopping and removing containers, networks, volumes, and images…"
+docker-compose -f "$targetDir/$dockerComposeFile" down --remove-orphans --volumes
+info "- removing $targetDir…"
 rm -rf "$targetDir"

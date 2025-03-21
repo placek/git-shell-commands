@@ -2,9 +2,11 @@
 
 reposDir="/srv/run"
 
+info() { echo ">> $1"; }
+
 if [ -z "$1" ]; then
-  >&2 echo "exiting, no repo name input to delete"
-  >&2 echo "usage: 'remove <repo>'"
+  >&2 info "exiting, no repo name input to delete"
+  >&2 info "usage: 'remove <repo>'"
   exit 1
 fi
 
@@ -18,18 +20,18 @@ case "$1" in
 esac
 
 if [ ! -d "$deleteRepoDir" ]; then
-  >&2 echo "exiting, repo '$deleteRepoDir' does not exist"
+  >&2 info "exiting, repo '$deleteRepoDir' does not exist"
   exit 1
 fi
 
-echo "are you sure to delete the repo '$deleteRepoDir' (y/n)?"
+info "are you sure to delete the repo '$deleteRepoDir' (y/n)?"
 read -r choice
 
 case "$choice" in
-  y|Y) echo "'yes' selected, deleting '$deleteRepoDir'" ;;
-  *)   echo "exiting" && exit 0 ;;
+  y|Y) info "'yes' selected, deleting '$deleteRepoDir'" ;;
+  *)   info "exiting" && exit 0 ;;
 esac
 
 rm -rf "$deleteRepoDir"
 
-echo "repo '$deleteRepoDir' has been deleted"
+info "repo '$deleteRepoDir' has been deleted"
